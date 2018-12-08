@@ -122,7 +122,6 @@ GameObject:
   m_Component:
   - component: {fileID: 465410212}
   - component: {fileID: 465410211}
-  - component: {fileID: 465410210}
   - component: {fileID: 465410213}
   m_Layer: 0
   m_Name: Land
@@ -131,26 +130,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!50 &465410210
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 465410209}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 0.0001
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!212 &465410211
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -605,9 +584,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1894806659}
   - component: {fileID: 1894806658}
-  - component: {fileID: 1894806657}
   - component: {fileID: 1894806660}
   - component: {fileID: 1894806661}
+  - component: {fileID: 1894806657}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -628,9 +607,9 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 4
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: d3edde1241fd34f24b3d44584ef25182, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -730,3 +709,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172dfd830a70a4a7cbdb9797374fd2a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  JumpLowest: 1000
