@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class GoalChecker : MonoBehaviour
+public class GoalChecker_RL : MonoBehaviour
 {
     public GameObject player;
     bool CheckGoal = false; //プレイヤーがゴールに到達したかを判断
@@ -19,6 +20,11 @@ public class GoalChecker : MonoBehaviour
         {
             this.player.GetComponent<Rigidbody2D>().velocity = Vector2.zero; //プレイヤーの停止
             this.player.GetComponent<PlayerController>().enabled = false; //「PlayerController」の停止(操作不能にする)
+
+            if (Input.GetKey(KeyCode.Space))　//ゴールした時、スペースキー入力でリトライ
+            {
+                SceneManager.LoadScene("RiskLevel");
+            }
         }
     }
 
