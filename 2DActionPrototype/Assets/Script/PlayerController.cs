@@ -8,9 +8,9 @@ public class PlayerController : MonoBehaviour
 
     float JumpForce = 0.0f; //ジャンプのベクトルを収納する
     float JumpLowest = 1000.0f; //ジャンプのベクトルの下限を収納する
-    float MoveForce = 20.0f; //横移動のベクトルを収納する
+    float MoveForce = 30.0f; //横移動のベクトルを収納する
     float MoveLimit = 5.0f; //横移動時のベクトル上限を収納する
-    float DashForce = 25.0f; //ダッシュ時のベクトルを収納する
+    float DashForce = 40.0f; //ダッシュ時のベクトルを収納する
     float DashLimit = 10.0f; //ダッシュ時のベクトル上限を収納する
 
     float PlayerForce = 0.0f; //プレイヤーのX軸ベクトルを収納する
@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
 
     bool JumpOnGround = false; //プレイヤーのジャンプを１回に制御する
     float JumpVelocity = 0.0f; //ジャンプした瞬間の速度を収納する
+
+    public int Brake = 0;
 
     void Start()
     {
@@ -56,39 +58,31 @@ public class PlayerController : MonoBehaviour
             this.JumpOnGround = false; //地面から離れたことを収納
         }
 
-
         //横移動
-        if (Input.GetKey(KeyCode.RightArrow)) //「十字右キーが押されている時」に右へ移動
+        if (Input.GetKey(KeyCode.RightArrow))
         {
-            //速度制限をつける
-            if (this.rigid2D.velocity.x < this.PlayerLimit)
+            if (this.rigid2D.velocity.x < this.PlayerLimit) //「十字右キーが押されている時」に右へ移動 ＆ 速度制限
             {
                 this.rigid2D.AddForce(transform.right * this.PlayerForce);
             }
         }
-        else if (Input.GetKey(KeyCode.LeftArrow)) //「十字左キーが押されている時」に左へ移動
+        else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            //速度制限をつける
-            if (this.rigid2D.velocity.x > this.PlayerLimit * -1)
+            if (this.rigid2D.velocity.x > this.PlayerLimit * -1) //「十字左キーが押されている時」に左へ移動 ＆ 速度制限
             {
                 this.rigid2D.AddForce(transform.right * this.PlayerForce * -1);
             }
         }
-        else //ブレーキ
+        else if(this.JumpOnGround)
         {
-            if (this.rigid2D.velocity.x > 0.0f && this.JumpOnGround) //右向きの時
-            {
-                rigid2D.velocity = Vector2.zero;
-            }
-            else if (this.rigid2D.velocity.x < 0.0f && this.JumpOnGround) //左向きの時
-            {
-                rigid2D.velocity = Vector2.zero;
-            }
+            this.rigid2D.velocity = Vector2.zero;
         }
 
+        //反発係数を変更できる…。現状保留のメモ用。
+        //this.rigid2D.sharedMaterial.friction = 0.0f;
 
         //プレイヤーの速度と最高速を状況判断で決定
-        if (Input.GetKey(KeyCode.X)) //「Xキーが押されている時」にダッシュ
+        if (Input.GetKey(KeyCode.X) && this.JumpOnGround) //「Xキーが押されている時」にダッシュ
         {
             this.PlayerForce = this.DashForce;
             this.PlayerLimit = this.DashLimit;
