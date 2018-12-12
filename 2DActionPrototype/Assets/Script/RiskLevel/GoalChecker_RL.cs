@@ -21,7 +21,7 @@ public class GoalChecker_RL : MonoBehaviour
             this.player.GetComponent<Rigidbody2D>().velocity = Vector2.zero; //プレイヤーの停止
             this.player.GetComponent<PlayerController>().enabled = false; //「PlayerController」の停止(操作不能にする)
 
-            if (Input.GetKey(KeyCode.Space))　//ゴールした時、スペースキー入力でリトライ
+            if (Input.GetKey(KeyCode.Joystick1Button8))　//ゴールした時、スペースキー入力でリトライ
             {
                 SceneManager.LoadScene("RiskLevel");
             }

@@ -19,18 +19,29 @@ public class PlayerController : MonoBehaviour
     bool JumpOnGround = false; //プレイヤーのジャンプを１回に制御する
     float JumpVelocity = 0.0f; //ジャンプした瞬間の速度を収納する
 
-    public int Brake = 0;
+    public int Brake = 0; //ゲーム終了を受け取る
+
+    //ジョイコンのスティックの入力を検出する
+    public float JoyconHor; //水平方向の検出を収納。-１…右移動、1…左移動
+    public float JoyconVer; //垂直方向の検出を収納
 
     void Start()
     {
         //コンポーネント「Rigidbody2D」取得
         this.rigid2D = GetComponent<Rigidbody2D>();
+
+        //０…ダッシュ、１…ジャンプ
+        // int == (int)KeyCode.Joystick1Button0
     }
 
     void Update()
     {
+        // Joy-Conのアナログスティックを検出する
+        JoyconHor = Input.GetAxis("Horizontal1"); //水平方向
+        JoyconVer = Input.GetAxis("Vertical1"); //垂直方向
+
         //「Zキーが押された時」にジャンプ
-        if (Input.GetKeyDown(KeyCode.Z) && this.JumpOnGround)
+        if (Input.GetKey(KeyCode.Joystick1Button1) && this.JumpOnGround)
         {
             //ジャンプした時の速度を収納
             this.JumpVelocity = Mathf.Floor(this.rigid2D.velocity.x); //Floorで少数端数をカット
@@ -41,11 +52,11 @@ public class PlayerController : MonoBehaviour
             }
 
             //助走がついた時にジャンプ力を増す様に
-            if (this.JumpVelocity > 5.0f && Input.GetKey(KeyCode.X)) //右向きの時
+            if (this.JumpVelocity > 5.0f && Input.GetKey(KeyCode.Joystick1Button0)) //右向きの時
             {
                 this.JumpForce = (this.JumpVelocity - 5.0f) * 50.0f + JumpLowest;
             }
-            else if(this.JumpVelocity < -5.0f && Input.GetKey(KeyCode.X)) //左向きの時
+            else if(this.JumpVelocity < -5.0f && Input.GetKey(KeyCode.Joystick1Button0)) //左向きの時
             {
                 this.JumpForce = (this.JumpVelocity * (-1) - 5.0f) * 50.0f + JumpLowest;
             }
@@ -59,16 +70,18 @@ public class PlayerController : MonoBehaviour
         }
 
         //横移動
-        if (Input.GetKey(KeyCode.RightArrow))
+        if ((int)this.JoyconHor == -1) //「十字右キーが押されている時」に右へ移動
         {
-            if (this.rigid2D.velocity.x < this.PlayerLimit) //「十字右キーが押されている時」に右へ移動 ＆ 速度制限
+            Debug.Log("Right");
+            if (this.rigid2D.velocity.x < this.PlayerLimit) //速度制限
             {
                 this.rigid2D.AddForce(transform.right * this.PlayerForce);
             }
         }
-        else if (Input.GetKey(KeyCode.LeftArrow))
+        else if ((int)this.JoyconHor == 1) //「十字左キーが押されている時」に左へ移動
         {
-            if (this.rigid2D.velocity.x > this.PlayerLimit * -1) //「十字左キーが押されている時」に左へ移動 ＆ 速度制限
+            Debug.Log("Left");
+            if (this.rigid2D.velocity.x > this.PlayerLimit * -1) //速度制限
             {
                 this.rigid2D.AddForce(transform.right * this.PlayerForce * -1);
             }
@@ -82,7 +95,7 @@ public class PlayerController : MonoBehaviour
         //this.rigid2D.sharedMaterial.friction = 0.0f;
 
         //プレイヤーの速度と最高速を状況判断で決定
-        if (Input.GetKey(KeyCode.X) && this.JumpOnGround) //「Xキーが押されている時」にダッシュ
+        if (Input.GetKey(KeyCode.Joystick1Button0) && this.JumpOnGround) //「Xキーが押されている時」にダッシュ
         {
             this.PlayerForce = this.DashForce;
             this.PlayerLimit = this.DashLimit;
@@ -103,4 +116,10 @@ public class PlayerController : MonoBehaviour
             this.JumpOnGround = true;
         }
     }
+
+    //デバッグ用表示
+    //void OnGUI()
+    //{
+    //    GUILayout.Label((JoyconHor).ToString() + "、" + (JoyconVer).ToString());
+    //}
 }
