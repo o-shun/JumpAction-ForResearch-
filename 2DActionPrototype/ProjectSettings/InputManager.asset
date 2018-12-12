@@ -19,7 +19,7 @@ InputManager:
     snap: 0
     invert: 1
     type: 2
-    axis: 8
+    axis: 10
     joyNum: 1
   - serializedVersion: 3
     m_Name: Vertical1
@@ -35,7 +35,7 @@ InputManager:
     snap: 0
     invert: 0
     type: 2
-    axis: 8
+    axis: 11
     joyNum: 1
   - serializedVersion: 3
     m_Name: Fire1

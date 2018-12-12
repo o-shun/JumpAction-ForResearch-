@@ -17,12 +17,12 @@ public class JoyConTester : MonoBehaviour
     void Update()
     {
         // Joy-Con(R)
-        //h1 = Input.GetAxis("Horizontal1");
-        //v1 = Input.GetAxis("Vertical1");
+        h1 = Input.GetAxis("Horizontal1");
+        v1 = Input.GetAxis("Vertical1");
 
         // Joy-Con(L)
-        //h2 = Input.GetAxis("Horizontal2");
-        //v2 = Input.GetAxis("Vertical2");
+        h2 = Input.GetAxis("Horizontal2");
+        v2 = Input.GetAxis("Vertical2");
     }
 
     void OnGUI()
