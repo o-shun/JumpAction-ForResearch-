@@ -72,7 +72,6 @@ public class PlayerController : MonoBehaviour
         //横移動
         if ((int)this.JoyconHor == -1) //「十字右キーが押されている時」に右へ移動
         {
-            Debug.Log("Right");
             if (this.rigid2D.velocity.x < this.PlayerLimit) //速度制限
             {
                 this.rigid2D.AddForce(transform.right * this.PlayerForce);
@@ -80,7 +79,6 @@ public class PlayerController : MonoBehaviour
         }
         else if ((int)this.JoyconHor == 1) //「十字左キーが押されている時」に左へ移動
         {
-            Debug.Log("Left");
             if (this.rigid2D.velocity.x > this.PlayerLimit * -1) //速度制限
             {
                 this.rigid2D.AddForce(transform.right * this.PlayerForce * -1);
