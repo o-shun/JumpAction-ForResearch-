@@ -6,118 +6,70 @@ public class PlayerController : MonoBehaviour
 {
     Rigidbody2D rigid2D;
 
-    float JumpForce = 0.0f; //ジャンプのベクトルを収納する
-    float JumpLowest = 1000.0f; //ジャンプのベクトルの下限を収納する
-    float MoveForce = 30.0f; //横移動のベクトルを収納する
-    float MoveLimit = 5.0f; //横移動時のベクトル上限を収納する
-    float DashForce = 40.0f; //ダッシュ時のベクトルを収納する
-    float DashLimit = 10.0f; //ダッシュ時のベクトル上限を収納する
+    Vector2 PlayerVector; //プレイヤーのベクトルを収納
 
-    float PlayerForce = 0.0f; //プレイヤーのX軸ベクトルを収納する
-    float PlayerLimit = 0.0f; //プレイヤーのX軸ベクトル上限を収納する
+    float PlayerLimit = 0.0f; //プレイヤーの最高速度を収納
+    float MoveLimit = 5.0f; //歩行時の最高速度
+    float DashLimit = 10.0f;　//ダッシュ時の最高速度
+    float ForcePower = 10.0f; // 慣性のかかり具合(大きければすぐ最高速に)
 
-    bool JumpOnGround = false; //プレイヤーのジャンプを１回に制御する
-    float JumpVelocity = 0.0f; //ジャンプした瞬間の速度を収納する
-
-    public int Brake = 0; //ゲーム終了を受け取る
+    float JumpForce = 1000.0f; //ジャンプ力を収納する
 
     //ジョイコンのスティックの入力を検出する
-    public float JoyconHor; //水平方向の検出を収納。-１…右移動、1…左移動
-    public float JoyconVer; //垂直方向の検出を収納
+    float JoyconHor; //水平方向の検出を収納
+    //float JoyconVer; //垂直方向の検出を収納。念のため記載
 
     void Start()
     {
         //コンポーネント「Rigidbody2D」取得
         this.rigid2D = GetComponent<Rigidbody2D>();
-
-        //０…ダッシュ、１…ジャンプ
-        // int == (int)KeyCode.Joystick1Button0
     }
 
     void Update()
     {
-        // Joy-Conのアナログスティックを検出する
-        JoyconHor = Input.GetAxis("Horizontal1"); //水平方向
-        JoyconVer = Input.GetAxis("Vertical1"); //垂直方向
+        //ジョイコンのスティック入力がされているかと、その方向を取得する。
+        this.JoyconHor = Input.GetAxis("Horizontal1") * -1; //水平方向。-１…左移動、1…右移動
+        //this.JoyconVer = Input.GetAxis("Vertical1"); //垂直方向。念のため記載
 
-        //「Zキーが押された時」にジャンプ
-        if (Input.GetKey(KeyCode.Joystick1Button1) && this.JumpOnGround)
+        //ジョイコンの←のボタンで、最高速度を上げダッシュができる。押されてない時は最高速度を下げる。
+        if (Input.GetKey(KeyCode.Joystick1Button0))
         {
-            //ジャンプした時の速度を収納
-            this.JumpVelocity = Mathf.Floor(this.rigid2D.velocity.x); //Floorで少数端数をカット
-            //ジャンプの最大値の調整
-            if (this.JumpVelocity > 10.0f) 
-            {
-                this.JumpVelocity = 10.0f;
-            }
-
-            //助走がついた時にジャンプ力を増す様に
-            if (this.JumpVelocity > 5.0f && Input.GetKey(KeyCode.Joystick1Button0)) //右向きの時
-            {
-                this.JumpForce = (this.JumpVelocity - 5.0f) * 50.0f + JumpLowest;
-            }
-            else if(this.JumpVelocity < -5.0f && Input.GetKey(KeyCode.Joystick1Button0)) //左向きの時
-            {
-                this.JumpForce = (this.JumpVelocity * (-1) - 5.0f) * 50.0f + JumpLowest;
-            }
-            else
-            {
-                this.JumpForce = this.JumpLowest; //ダッシュ時以外のジャンプ力は統一
-            }
-
-            this.rigid2D.AddForce(transform.up * this.JumpForce); //ジャンプ力の適応
-            this.JumpOnGround = false; //地面から離れたことを収納
-        }
-
-        //横移動
-        if ((int)this.JoyconHor == -1) //「十字右キーが押されている時」に右へ移動
-        {
-            if (this.rigid2D.velocity.x < this.PlayerLimit) //速度制限
-            {
-                this.rigid2D.AddForce(transform.right * this.PlayerForce);
-            }
-        }
-        else if ((int)this.JoyconHor == 1) //「十字左キーが押されている時」に左へ移動
-        {
-            if (this.rigid2D.velocity.x > this.PlayerLimit * -1) //速度制限
-            {
-                this.rigid2D.AddForce(transform.right * this.PlayerForce * -1);
-            }
-        }
-        else if(this.JumpOnGround)
-        {
-            this.rigid2D.velocity = Vector2.zero;
-        }
-
-        //反発係数を変更できる…。現状保留のメモ用。
-        //this.rigid2D.sharedMaterial.friction = 0.0f;
-
-        //プレイヤーの速度と最高速を状況判断で決定
-        if (Input.GetKey(KeyCode.Joystick1Button0) && this.JumpOnGround) //「Xキーが押されている時」にダッシュ
-        {
-            this.PlayerForce = this.DashForce;
-            this.PlayerLimit = this.DashLimit;
+            this.PlayerLimit = this.DashLimit; //ダッシュ時の最高速度を代入　
         }
         else
         {
-            this.PlayerForce = this.MoveForce;
-            this.PlayerLimit = this.MoveLimit;
+            this.PlayerLimit = this.MoveLimit; //歩行時の最高速度を代入
         }
-    }
 
-    //ジャンプを１回に制御する為に地面衝突を判定する関数
-    void OnCollisionEnter2D(Collision2D other)
-    {
-        //タグ「Ground」で地面に触れた時という制限を追加
-        if (other.gameObject.CompareTag("Ground"))
+        //ジョイコンの↓ボタンでジャンプをする
+        if (Input.GetKeyDown(KeyCode.Joystick1Button1) && this.rigid2D.velocity.y == 0)
         {
-            this.JumpOnGround = true;
+            this.rigid2D.AddForce(transform.up * this.PlayerVector.y); //ジャンプ力の適応
         }
     }
 
-    //デバッグ用表示
-    //void OnGUI()
-    //{
-    //    GUILayout.Label((JoyconHor).ToString() + "、" + (JoyconVer).ToString());
-    //}
+    //FixedUpdate() → 秒間に呼ばれる回数が一定のUpdate()。Rigidbodyの更新はここでやるのが良い。GetKeyはダメ。
+    void FixedUpdate()
+    {
+        this.PlayerVector = Vector2.zero; // 移動速度を初期化
+        this.PlayerVector.x = this.PlayerLimit * this.JoyconHor; //ジョイコンの向きを判定
+        this.PlayerVector.y = this.JumpForce; //ダッシュ時以外はジャンプ力を統一
+
+        //ダッシュ時に速度が大きいほどでジャンプ力を強くする
+        if ((int)this.rigid2D.velocity.x > 5.0f) //右向きの時
+        {
+            this.PlayerVector.y += ((int)this.rigid2D.velocity.x - 5.0f * (int)this.JoyconHor) * 50.0f;
+        }
+        else if ((int)this.rigid2D.velocity.x < -5.0f) //左向きの時
+        {
+            this.PlayerVector.y -= ((int)this.rigid2D.velocity.x - 5.0f * (int)this.JoyconHor) * 50.0f;
+        }
+
+        //ジョイコンの指定した方向に力を加える
+        //「moveVector - this.rigid2D.velocity」で、最高速度に近づくたび、かける力を弱くする。「this.ForcePower」で効率の調整。
+        this.rigid2D.AddForce(transform.right * this.ForcePower * (this.PlayerVector - this.rigid2D.velocity));
+
+        //１フレームごとの速度(velocity)と、ニュートン(AddForceの強さ)の表示用
+        //Debug.Log(this.rigid2D.velocity.x + "、" + this.ForcePower * (moveVector.x - this.rigid2D.velocity.x));
+    }
 }
