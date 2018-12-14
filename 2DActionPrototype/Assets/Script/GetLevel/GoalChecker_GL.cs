@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class HellChecker : MonoBehaviour
+public class GoalChecker_GL : MonoBehaviour
 {
     public GameObject player;
-    bool CheckHell = false; //プレイヤーがゴールに到達したかを判断
+    bool CheckGoal = false; //プレイヤーがゴールに到達したかを判断
 
     void Start()
     {
@@ -16,12 +16,15 @@ public class HellChecker : MonoBehaviour
 
     void Update()
     {
-        if (this.CheckHell)
+        if (this.CheckGoal)
         {
             this.player.GetComponent<Rigidbody2D>().velocity = Vector2.zero; //プレイヤーの停止
             this.player.GetComponent<PlayerController>().enabled = false; //「PlayerController」の停止(操作不能にする)
-            SceneManager.LoadScene("RiskLevel");
 
+            if (Input.GetKey(KeyCode.Joystick1Button8))　//ゴールした時、スペースキー入力でリトライ
+            {
+                SceneManager.LoadScene("GetLevel");
+            }
         }
     }
 
@@ -30,7 +33,7 @@ public class HellChecker : MonoBehaviour
         //タグ「Player」でキャラがゴールにに触れた時を検出する
         if (other.gameObject.CompareTag("Player"))
         {
-            this.CheckHell = true;
+            this.CheckGoal = true;
         }
     }
 }
