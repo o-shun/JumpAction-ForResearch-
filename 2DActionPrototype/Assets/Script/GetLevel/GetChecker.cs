@@ -5,18 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class GetChecker : MonoBehaviour
 {
+    GameObject goal; //ゲームオブジェクト「Goal」を収納
     bool CheckGet = false; //プレイヤーがゴールに到達したかを判断
 
     void Start()
     {
+        this.goal = GameObject.Find("Goal");
     }
 
     void Update()
     {
+        //アイテム取得がされた時
         if (this.CheckGet)
         {
-            //アイテム取得と同時にスプライトを消去
-            this.GetComponent<SpriteRenderer>().enabled = false;
+            this.goal.GetComponent<GoalChecker_GL>().GetItem = true; //アイテム取得を「GoalChecker_GL」に通知
+            Destroy(gameObject); //アイテム取得でオブジェクトを消去
         }
     }
 
