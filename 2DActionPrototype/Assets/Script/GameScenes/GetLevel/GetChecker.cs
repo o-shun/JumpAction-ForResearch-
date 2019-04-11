@@ -18,7 +18,7 @@ public class GetChecker : MonoBehaviour
         //アイテム取得がされた時
         if (this.CheckGet)
         {
-            this.goal.GetComponent<GoalChecker_GL>().GetItem = true; //アイテム取得を「GoalChecker_GL」に通知
+            this.goal.GetComponent<GoalChecker>().GetItem = true; //アイテム取得を「GoalChecker」に通知
             Destroy(gameObject); //アイテム取得でオブジェクトを消去
         }
     }

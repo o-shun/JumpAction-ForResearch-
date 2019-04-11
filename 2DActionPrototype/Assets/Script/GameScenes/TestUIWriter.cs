@@ -19,6 +19,6 @@ public class TestUIWriter : MonoBehaviour
     {
         //lengthに「Player」の現在の横移動ベクトルを収納し、テキストで更新表示
         float length = this.player.GetComponent<Rigidbody2D>().velocity.x;
-        this.text.GetComponent<Text>().text = length.ToString("F2");
+        this.text.GetComponent<Text>().text = length.ToString("F3");
     }
 }
